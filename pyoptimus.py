@@ -8,7 +8,7 @@ import json
 class pyoptimus:
     def __init__(self, serializer=None):
         self.OPTIMUS_URL = 'http://optimus.van.tasktop.com'
-        self.GET_RESULTS = '/build_results'
+        self.GET_RESULTS = '/build_results?from=2014-01-01'
         self.serializer = serializer
 
     def build_results(self, connector=None):
@@ -51,6 +51,7 @@ class pyoptimus:
 def main():
     instance = pyoptimus('csv')
     results = instance.build_results()
+    print len(results)
     print instance.schema()
     print results[:3]
 
