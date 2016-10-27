@@ -28,7 +28,7 @@ class pyoptimus:
         return build
 
     def schema(self):
-        return ['connector_id', 'pass_count', 'fail_count', 'skip_count', 'duration']
+        return ['connector_id', 'pass_count', 'fail_count', 'skip_count', 'duration', 'timestamp']
 
     def serialize_build_as_csv(self, build):
         csv_items = []
