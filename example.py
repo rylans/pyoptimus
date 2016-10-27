@@ -18,3 +18,9 @@ print "Total build results: ", len(res)
 # grab build results for a certain connector
 sp_results = instance.build_results('sharepoint')
 print "Sharepoint build results: ", len(sp_results), sp_results[0]
+
+
+# Get a few rally build results and serialize as csv
+csv_instance = pyoptimus('csv')
+print csv_instance.schema()
+print csv_instance.build_results('jira')[:4]
