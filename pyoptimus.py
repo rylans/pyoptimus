@@ -27,6 +27,8 @@ class pyoptimus:
             return self.serialize_build_as_csv(build)
         elif self.serializer is 'floats':
             return self.serialize_build_as_floats(build)
+        elif self.serializer is 'raw_list':
+            return self.serialize_build_as_raw_list(build)
         return build
 
     def schema(self):
@@ -43,15 +45,24 @@ class pyoptimus:
         else:
             raise RuntimeError('Invalid timestamp part label')
 
-    def serialize_build_as_csv(self, build):
-        csv_items = []
+    def as_list(self, build):
+        '''Put the items in a list using the schema()'''
+        items = []
         for key in self.schema():
             if 'timestamp_' in key:
                 value = self.timestamp_part(key, build['timestamp'])
             else:
                 value = build[key]
-            csv_items.append(str(value))
-        return ','.join(csv_items)
+            items.append(str(value))
+        return items
+
+    def serialize_build_as_csv(self, build):
+        '''Put the data in a list and then join it with commas'''
+        return ','.join(self.as_list(build))
+
+    def serialize_build_as_raw_list(self, build):
+        '''Put the data into a list as'''
+        return self.as_list(build)
 
     def serialize_build_as_floats(self, build):
         connector_id = int(build['connector_id'])
@@ -69,7 +80,8 @@ def main():
     results = instance.build_results()
     print len(results)
     print instance.schema()
-    print results[:3]
+    for r in results[:50]:
+        print r
 
 if __name__ == '__main__':
     main()
