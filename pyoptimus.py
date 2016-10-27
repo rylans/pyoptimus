@@ -1,5 +1,7 @@
 '''
 Optimus data retrieval
+
+timestamp -> month, day, hour
 '''
 
 import urllib2
@@ -28,12 +30,26 @@ class pyoptimus:
         return build
 
     def schema(self):
-        return ['connector_id', 'pass_count', 'fail_count', 'skip_count', 'duration', 'timestamp']
+        return ['connector_id', 'pass_count', 'fail_count', 'skip_count',
+                'duration', 'timestamp_month', 'timestamp_day', 'timestamp_hour']
+
+    def timestamp_part(self, label, timestamp):
+        if label == 'timestamp_month':
+            return timestamp.split('-')[1]
+        elif label == 'timestamp_day':
+            return timestamp.split('-')[2].split('T')[0]
+        elif label == 'timestamp_hour':
+            return timestamp.split('T')[1].split(':')[0]
+        else:
+            raise RuntimeError('Invalid timestamp part label')
 
     def serialize_build_as_csv(self, build):
         csv_items = []
         for key in self.schema():
-            value = build[key]
+            if 'timestamp_' in key:
+                value = self.timestamp_part(key, build['timestamp'])
+            else:
+                value = build[key]
             csv_items.append(str(value))
         return ','.join(csv_items)
 
