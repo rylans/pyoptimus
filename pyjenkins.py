@@ -15,9 +15,16 @@ class pyjenkins:
         self.username = username
         self.password = password
 
+    def _url_builder(self, connector_job_name):
+        if 'connector-' in connector_job_name:
+            return self.start + connector_job_name + self.end
+        else:
+            return self.start + 'connector-' + connector_job_name + self.end
+
     def trigger(self, connector_job_name):
         print "Triggering connector: " + connector_job_name
-        full_url = self.start + connector_job_name + self.end
+        full_url = self._url_builder(connector_job_name)
+        #full_url = self.start + connector_job_name + self.end
         print full_url
         resp = requests.post(full_url, auth=HTTPBasicAuth(self.username, self.password))
         return resp
