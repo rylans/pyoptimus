@@ -13,13 +13,18 @@ class pyoptimus:
         self.GET_RESULTS = '/build_results?from=2014-01-01'
         self.serializer = serializer
 
-    def build_results(self, connector=None):
+    def last_fails(self, connector):
+        return int(self.build_results(connector, 1)[0][2])
+
+    def build_results(self, connector=None, lim=None):
         url = self.OPTIMUS_URL + self.GET_RESULTS
         response = urllib2.urlopen(url)
         if connector:
             data = [c for c in json.load(response) if connector in c['connector_kind']]
         else:
             data = json.load(response)
+        if lim:
+            data = data[:lim]
         return [self.serialize_build(b) for b in data]
 
     def serialize_build(self, build):
@@ -77,7 +82,7 @@ class pyoptimus:
 
 def main():
     instance = pyoptimus('csv')
-    results = instance.build_results()
+    results = instance.build_results('com.tasktop.connector.irise', 1)
     print len(results)
     print instance.schema()
     for r in results[:50]:
