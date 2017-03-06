@@ -48,6 +48,10 @@ class DashboardManager:
         self._log_line("CALL manage")
 
         schedule.every().day.at("14:41").do(self._internal_manage)
+
+        for job in schedule.jobs:
+            self._log_line(str(job))
+
         while True:
             schedule.run_pending()
             time.sleep(1)
